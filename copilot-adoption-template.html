@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive Copilot & Agent Adoption Guide - Understand your AI adoption journey">
+    <title>Copilot & Agent Adoption Guide</title>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+            --primary-purple: #8b5cf6;
+            --primary-blue: #3b82f6;
+            --dark-bg: #1e1e1e;
+            --light-bg: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --info-color: #3b82f6;
+            --sidebar-width: 300px;
+            --header-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: #f9fafb;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: var(--primary-gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .header-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: var(--header-height);
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--header-height));
+            background: white;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 900;
+        }
+
+        .nav-section {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s;
+            margin-bottom: 0.25rem;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background: #f3f4f6;
+            color: var(--primary-purple);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+            color: var(--primary-purple);
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 2rem;
+            min-height: calc(100vh - var(--header-height));
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-description {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .card-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .card-trend {
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .trend-up {
+            color: var(--success-color);
+        }
+
+        .trend-down {
+            color: var(--danger-color);
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            gap: 2rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-item {
+            flex: 1;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Tables */
+        .data-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f9fafb;
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        /* Alert Boxes */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .alert-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            border-left: 4px solid var(--info-color);
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .alert-danger {
+            background: #fee2e2;
+            border-left: 4px solid var(--danger-color);
+        }
+
+        /* Progress Bars */
+        .progress-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .progress-bar-container {
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-gradient);
+            transition: width 1s ease;
+        }
+
+        /* Insights Section */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .insight-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--primary-purple);
+        }
+
+        .insight-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .insight-content {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .insight-recommendations {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .insight-recommendations ul {
+            margin-left: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .insight-recommendations li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Maturity Stage */
+        .maturity-stage {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .stage-indicator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stage-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .stage-info {
+            flex: 1;
+        }
+
+        .stage-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .stage-description {
+            color: var(--text-secondary);
+        }
+
+        /* Interactive Quiz */
+        .quiz-container {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .quiz-question {
+            margin-bottom: 2rem;
+        }
+
+        .quiz-question-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .quiz-option {
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary-purple);
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .quiz-option.selected {
+            border-color: var(--primary-purple);
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Recommendations */
+        .recommendations {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .recommendations-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .recommendation-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary-purple);
+        }
+
+        .recommendation-priority {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .priority-high {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .priority-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .priority-low {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .recommendation-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .recommendation-description {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 4rem;
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div>
+            <div class="header-title">🤖 Copilot & Agent Adoption Guide</div>
+            <div class="header-subtitle">Your Interactive AI Adoption Journey</div>
+        </div>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a class="nav-link active" onclick="showSection('overview')">📊 Executive Summary</a>
+            <a class="nav-link" onclick="showSection('maturity')">📈 AI Maturity Stage</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Agents</div>
+            <a class="nav-link" onclick="showSection('agents-overview')">🤖 Agent Adoption</a>
+            <a class="nav-link" onclick="showSection('agents-teams')">👥 Top Teams Using Agents</a>
+            <a class="nav-link" onclick="showSection('agents-users')">⭐ Power Users</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Copilot Chat</div>
+            <a class="nav-link" onclick="showSection('chat-overview')">💬 Chat Usage</a>
+            <a class="nav-link" onclick="showSection('chat-opportunities')">🎯 Growth Opportunities</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Recommendations</div>
+            <a class="nav-link" onclick="showSection('recommendations')">✨ Tailored Recommendations</a>
+            <a class="nav-link" onclick="showSection('next-steps')">🚀 Next Steps</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- ===================== EXECUTIVE SUMMARY ===================== -->
+        <section id="overview" class="content-section active">
+            <div class="section-header">
+                <h1 class="section-title">Executive Summary</h1>
+                <p class="section-description">Your organization's AI adoption at a glance</p>
+            </div>
+
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-label">Total Agent Users</div>
+                    <div class="stat-value">—</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Total Agent Sessions</div>
+                    <div class="stat-value">—</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Active Agents</div>
+                    <div class="stat-value">— / —</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Organizations</div>
+                    <div class="stat-value">—</div>
+                </div>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-label">Avg Sessions per User</div>
+                    <div class="card-value">—</div>
+                    <div class="card-trend trend-up">
+                        <span>↑</span> [Weekly avg; MoM growth %]
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-label">Total Agent Prompts</div>
+                    <div class="card-value">—</div>
+                    <div class="card-trend">
+                        [Sessions tracked across N departments]
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-label">Total Agents Created</div>
+                    <div class="card-value">—</div>
+                    <div class="card-trend">
+                        [N active (N% utilization rate)]
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info">
+                <div class="alert-icon">💡</div>
+                <div class="alert-content">
+                    <div class="alert-title">Key Insight</div>
+                    <div>[2–3 sentence summary of overall adoption health. Cover: MoM growth, total sessions, top-performing departments, habit formation status, and the most urgent gap to address.]</div>
+                </div>
+            </div>
+
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <div class="insight-title">🎯 Adoption Highlights</div>
+                    <div class="insight-content">
+                        <ul>
+                            <li><strong>[Top team by user count]</strong> leads agent adoption with [N] active users, the broadest reach of any team</li>
+                            <li><strong>[Top team by intensity]</strong> shows the highest per-user intensity — [N] users generating [N] agent sessions ([N] sessions/user avg)</li>
+                            <li><strong>[Top agent builder]</strong> is the leading agent creator, responsible for the #1 and #2 most-used custom agents in the organization</li>
+                            <li>[Notable M365 Copilot or Chat headline metric with MoM growth and top outlier team]</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-title">⚠️ Attention Areas</div>
+                    <div class="insight-content">
+                        <ul>
+                            <li>Only [N]% of created agents are actively used ([N] of [N] total agents)</li>
+                            <li>[N] agents have <strong>never been used</strong> — immediate review and clean-up of the environment is recommended</li>
+                            <li>[N]% of agent users are "Light" (1–5 active days/month) — only [N] user(s) reach Daily (16+ days) frequency</li>
+                            <li>[N] agents currently qualify as "High Impact" — [describe gap or achievement regarding broad org-wide adoption and strong return rate]</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== AI MATURITY STAGE ===================== -->
+        <section id="maturity" class="content-section">
+            <div class="section-header">
+                <h1 class="section-title">AI Maturity Assessment</h1>
+                <p class="section-description">Where you are on your AI journey</p>
+            </div>
+
+            <div class="maturity-stage">
+                <div class="stage-indicator">
+                    <div class="stage-number">[N]</div>
+                    <div class="stage-info">
+                        <div class="stage-name">Stage [N]: [Stage Name] → Stage [N+1]: [Next Stage Name]</div>
+                        <div class="stage-description">[One sentence describing the current adoption posture and the key signal (e.g. % light users, MoM growth) that defines this stage.]</div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <div class="alert-icon">📍</div>
+                    <div class="alert-content">
+                        <div class="alert-title">Your Current Stage</div>
+                        <div>Based on your adoption patterns, you're between <strong>Stage [N] ([Stage Name])</strong> and <strong>Stage [N+1] ([Stage Name])</strong>. [2–3 sentences covering: total agents created, MoM growth, % light users, active agents count, and the specific actions needed to advance to the next stage.]</div>
+                    </div>
+                </div>
+
+                <h3 style="margin: 2rem 0 1rem 0;">Characteristics of Your Current Stage:</h3>
+
+                <div class="progress-group">
+                    <div class="progress-label">
+                        <span>[Characteristic 1 — e.g. AI Tool Adoption Breadth]</span>
+                        <span>—%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="progress-group">
+                    <div class="progress-label">
+                        <span>[Characteristic 2 — e.g. Active Agent Utilization]</span>
+                        <span>—%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="progress-group">
+                    <div class="progress-label">
+                        <span>[Characteristic 3 — e.g. Habitual Usage (Moderate+ Users)]</span>
+                        <span>—%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="progress-group">
+                    <div class="progress-label">
+                        <span>[Characteristic 4 — e.g. Cross-Departmental Process Integration]</span>
+                        <span>—%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="insight-recommendations">
+                    <h4 style="margin-bottom: 0.5rem;">Path to Stage [N+1] ([Next Stage Name]):</h4>
+                    <ul>
+                        <li>[Action 1: Champions program — name specific teams/users and their current session rates]</li>
+                        <li>[Action 2: Reduce never-used agent count from N to target N within timeframe]</li>
+                        <li>[Action 3: Promote N agents to "High Impact" status — name the candidate agents and current return rates]</li>
+                        <li>[Action 4: Convert N% of "Light" users to "Moderate" usage through specific mechanism]</li>
+                        <li>[Action 5: Cross-team knowledge sharing — name key champion(s) and target audience]</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== AGENT ADOPTION OVERVIEW ===================== -->
+        <section id="agents-overview" class="content-section">
+            <div class="section-header">
+                <h1 class="section-title">Agent Adoption Overview</h1>
+                <p class="section-description">Understanding how your organization uses agents</p>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-label">Active Agent Users</div>
+                    <div class="card-value">—</div>
+                    <div class="card-trend trend-up">
+                        <span>↑</span> [N engaged in most recent week]
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-label">Sessions Per User</div>
+                    <div class="card-value">—</div>
+                    <div class="card-trend trend-up">
+                        <span>↑</span> [Weekly average; peak value and date]
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-label">Agent Utilization Rate</div>
+                    <div class="card-value">—%</div>
+                    <div class="card-trend trend-down">
+                        <span>↓</span> [Only N of N agents active — review needed]
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <div class="alert-icon">⚠️</div>
+                <div class="alert-content">
+                    <div class="alert-title">Agent Health Check Needed</div>
+                    <div>Of [N] total agents created, only [N] ([N]%) are actively used. A further [N] agents have never been used at all, and [N] are fully dormant (inactive 90+ days). Consider reviewing inactive agents and focusing resources on scaling the [N] proven ✅ Keep agents.</div>
+                </div>
+            </div>
+
+            <h3 style="margin: 2rem 0 1rem 0;">Top Performing Agents</h3>
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Agent Name</th>
+                            <th>Creator</th>
+                            <th>Users</th>
+                            <th>Sessions</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>[Agent Name]</strong></td>
+                            <td>[Creator]</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><span class="badge badge-success">✅ Keep</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>[Agent Name]</strong></td>
+                            <td>[Creator]</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><span class="badge badge-success">✅ Keep</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>[Agent Name]</strong></td>
+                            <td>[Creator]</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><span class="badge badge-success">✅ Keep</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>[Agent Name]</strong></td>
+                            <td>[Creator]</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><span class="badge badge-success">✅ Keep</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>[Agent Name]</strong></td>
+                            <td>[Creator]</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><span class="badge badge-success">✅ Keep</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-title">💡 Agent Insights</div>
+                <div class="insight-content">
+                    <p><strong>[Insight 1 title — e.g. First-Party Agents Dominate Volume]</strong> [Description: which agent leads, session count, user count, why it matters, and what it signals about where value is coming from.]</p>
+                    <p style="margin-top: 1rem;"><strong>[Insight 2 title — e.g. Top Custom Agent Builder]</strong> [Description: name the top creator, list their agents, total users served, number of departments, and why formalizing their role is a growth lever.]</p>
+                    <p style="margin-top: 1rem;"><strong>[Insight 3 title — e.g. Highest-Intensity Team]</strong> [Description: name the team, user count, total sessions, sessions/user, how it compares to org average, and what workflow it likely reflects.]</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== TOP TEAMS USING AGENTS ===================== -->
+        <section id="agents-teams" class="content-section">
+            <div class="section-header">
+                <h1 class="section-title">Teams Leading Agent Adoption</h1>
+                <p class="section-description">Which teams are driving AI innovation</p>
+            </div>
+
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Team</th>
+                            <th>Unique Users</th>
+                            <th>Total Interactions</th>
+                            <th>Agent Prompts</th>
+                            <th>Engagement Level</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>[Team Name]</strong></td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><span class="badge badge-info">Medium</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>[Team Name]</strong></td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><span class="badge badge-success">Power Users</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>[Team Name]</strong></td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><span class="badge badge-success">High</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>[Team Name]</strong></td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><span class="badge badge-success">Power Users</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>[Team Name]</strong></td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><span class="badge badge-success">Power Users</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>[Team Name]</strong></td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><span class="badge badge-success">Power Users</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>[Team Name]</strong></td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><span class="badge badge-info">High</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <div class="insight-title">🏆 Leading Teams</div>
+                    <div class="insight-content">
+                        <p><strong>[Top team 1]</strong> and <strong>[Top team 2]</strong> lead in user count and have the broadest organizational footprint, with [N] and [N] agent users respectively. [1–2 sentences on what their usage pattern signals about how agents are being used — experimental vs. embedded in workflows.]</p>
+                        <div class="insight-recommendations">
+                            <strong>Recommendation:</strong>
+                            <ul>
+                                <li>[Specific action to scale this team's use cases to their wider M365 Copilot user base]</li>
+                                <li>[Specific agent or workflow to replicate to an adjacent team]</li>
+                                <li>[Champion program nomination action for this team's lead(s)]</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-title">⚡ Power User Teams</div>
+                    <div class="insight-content">
+                        <p><strong>[Team Name]</strong> ([N] users, [N] sessions — [N]/user) and <strong>[Team Name]</strong> ([N] users, [N] sessions — [N]/user) show exceptional per-user engagement far above the [N] org average.</p>
+                        <div class="insight-recommendations">
+                            <strong>Opportunity:</strong>
+                            <ul>
+                                <li>[Action to document and publish the top team's use case as an internal success story]</li>
+                                <li>[Action to involve these teams in a cross-functional champions roundtable]</li>
+                                <li>[Action to expand the top team's agent access from current N users to target N users]</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== POWER USERS ===================== -->
+        <section id="agents-users" class="content-section">
+            <div class="section-header">
+                <h1 class="section-title">Agent Power Users</h1>
+                <p class="section-description">Champions leading the way</p>
+            </div>
+
+            <div class="alert alert-success">
+                <div class="alert-icon">🌟</div>
+                <div class="alert-content">
+                    <div class="alert-title">Power User Definition</div>
+                    <div>Power users have 100+ agent interactions and demonstrate consistent, valuable usage patterns. They are ideal candidates for becoming agent champions and trainers.</div>
+                </div>
+            </div>
+
+            <h3 style="margin: 2rem 0 1rem 0;">Top Power Users</h3>
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Team</th>
+                            <th>Role</th>
+                            <th>Interactions</th>
+                            <th>Prompts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>🥇</td>
+                            <td><strong>[Name]</strong></td>
+                            <td>[Team]</td>
+                            <td>[Role]</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>🥈</td>
+                            <td><strong>[Name]</strong></td>
+                            <td>[Team]</td>
+                            <td>[Role]</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>🥉</td>
+                            <td><strong>[Name]</strong></td>
+                            <td>[Team]</td>
+                            <td>[Role]</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td><strong>[Name]</strong></td>
+                            <td>[Team]</td>
+                            <td>[Role]</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td><strong>[Name]</strong></td>
+                            <td>[Team]</td>
+                            <td>[Role]</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td><strong>[Name]</strong></td>
+                            <td>[Team]</td>
+                            <td>[Role]</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td><strong>[Name]</strong></td>
+                            <td>[Team]</td>
+                            <td>[Role]</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td><strong>[Name]</strong></td>
+                            <td>[Team]</td>
+                            <td>[Role]</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <div class="insight-title">🎯 Power User Patterns</div>
+                    <div class="insight-content">
+                        <ul>
+                            <li><strong>[Pattern 1 — e.g. Creator-Users Lead]:</strong> [Description of the creator-user archetype and what it signals about value generation]</li>
+                            <li><strong>[Pattern 2 — e.g. Specialist Functions Drive Intensity]:</strong> [Description comparing sessions/user across specialist vs. generalist roles, with specific numbers]</li>
+                            <li><strong>[Pattern 3 — e.g. Small Teams, Big Impact]:</strong> [Description of how many top units have 1–2 users but generate outsized sessions — classic early-stage champion pattern]</li>
+                            <li><strong>[Pattern 4 — e.g. Operations &amp; PM Functions]:</strong> [Description of repetitive task automation use cases with specific sessions/user rates]</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-title">💼 Champion Program Opportunity</div>
+                    <div class="insight-content">
+                        <p>These power users are perfect candidates for an AI Champion program:</p>
+                        <div class="insight-recommendations">
+                            <strong>Suggested Actions:</strong>
+                            <ul>
+                                <li>[Action 1: Recognize the #1 power user publicly, assign them an all-hands demo slot for their top agent(s)]</li>
+                                <li>[Action 2: Invite top teams to co-design a use case library to share across N departments]</li>
+                                <li>[Action 3: Create a Power User fast-track with early access to new agents in the pipeline]</li>
+                                <li>[Action 4: Establish a recurring "Agent Office Hours" session led by power users]</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== COPILOT CHAT USAGE ===================== -->
+        <section id="chat-overview" class="content-section">
+            <div class="section-header">
+                <h1 class="section-title">Copilot Chat Usage</h1>
+                <p class="section-description">Understanding chat adoption patterns</p>
+            </div>
+
+            <div class="alert alert-info">
+                <div class="alert-icon">💬</div>
+                <div class="alert-content">
+                    <div class="alert-title">About Copilot Chat</div>
+                    <div>Copilot Chat provides web-grounded and work-grounded AI assistance across Microsoft 365 apps. Both licensed (M365 Copilot) and unlicensed (free) versions are available.</div>
+                </div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-title">📊 Chat Usage Insights</div>
+                <div class="insight-content">
+                    <p><strong>Unlicensed Copilot Chat</strong> has [N] active users generating [N] weekly sessions/user (+[N]% MoM), dominated by <strong>[Top Surface]</strong> ([N] users, [N] sessions) and <strong>[2nd Surface]</strong> ([N] users, [N] sessions) as the primary surfaces. The <strong>[Top dept]</strong> leads with [N] sessions/user/week, followed by <strong>[2nd dept]</strong> ([N]/user) and <strong>[3rd dept]</strong> ([N]/user). However, [N]% of unlicensed users are still 'Light' (1–5 active days/month) with only [N]% reaching Daily usage. <strong>M365 Copilot</strong> (licensed) shows [describe habit formation]: [N] users, [N] total sessions, [N] weekly sessions/user, and [N]% MoM growth — with [N]% of users at Moderate or higher usage. [Top outlier team] stands out at [N] sessions/user/week ([N] users, [N] total sessions). Top license upgrade candidates include [Team 1] ([N] sessions/week, rank #1 priority) and [Team 2] ([N] sessions/week, rank #[N]).</p>
+                    <ul style="margin-top: 1rem; margin-left: 1.5rem;">
+                        <li>[Top surface] is the #1 surface with [N] sessions across [N] users (avg [N] sessions/week/user)</li>
+                        <li>[2nd surface] generates [N] sessions from [N] users at [N] weekly sessions/user</li>
+                        <li>MoM growth of +[N]% indicates [characterize organic vs. driven adoption]</li>
+                        <li>[Team 1], [Team 2], and [Team 3] are top M365 Copilot license upgrade candidates based on the Priority Matrix</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== GROWTH OPPORTUNITIES ===================== -->
+        <section id="chat-opportunities" class="content-section">
+            <div class="section-header">
+                <h1 class="section-title">Growth Opportunities</h1>
+                <p class="section-description">Areas for expansion and improvement</p>
+            </div>
+
+            <div class="recommendations">
+                <h3 class="recommendations-title">📈 Scaling Opportunities</h3>
+
+                <div class="recommendation-item">
+                    <span class="recommendation-priority priority-high">HIGH PRIORITY</span>
+                    <div class="recommendation-title">[Recommendation Title — e.g. Activate the Agent Utilization Gap]</div>
+                    <div class="recommendation-description">[Description: specific numbers on active vs. created vs. never-used agents, which agents to archive, which to escalate and to whom, and the governance process to put in place.]</div>
+                    <div style="margin-top: 0.5rem; color: var(--text-secondary);"><strong>Impact:</strong> [Increasing active agent rate from N% to N% (targeting N active agents) and the user benefit of reduced environment confusion.]</div>
+                </div>
+
+                <div class="recommendation-item">
+                    <span class="recommendation-priority priority-high">HIGH PRIORITY</span>
+                    <div class="recommendation-title">[Recommendation Title — e.g. Launch a Formal AI Champions Program]</div>
+                    <div class="recommendation-description">[Description: name specific champion candidates with their sessions/user rates, formalize their roles, and describe the amplification network they create for the broader user base.]</div>
+                    <div style="margin-top: 0.5rem; color: var(--text-secondary);"><strong>Impact:</strong> [Target total agent users after N days, expressed as % growth from current baseline.]</div>
+                </div>
+
+                <div class="recommendation-item">
+                    <span class="recommendation-priority priority-medium">MEDIUM PRIORITY</span>
+                    <div class="recommendation-title">[Recommendation Title — e.g. Cross-Team Knowledge Sharing]</div>
+                    <div class="recommendation-description">[Description: name the top agents and their current reach (N users, N orgs), name the creator, and identify the target teams for replication with their current M365 user counts.]</div>
+                    <div style="margin-top: 0.5rem; color: var(--text-secondary);"><strong>Impact:</strong> [Converting N% of the target team's M365 users to agent users adds ~N new users and ~N sessions/week.]</div>
+                </div>
+
+                <div class="recommendation-item">
+                    <span class="recommendation-priority priority-medium">MEDIUM PRIORITY</span>
+                    <div class="recommendation-title">[Recommendation Title — e.g. Targeted Enablement for Low-Engagement Teams]</div>
+                    <div class="recommendation-description">[Description: name specific low-engagement teams with their current sessions/user, recommend a specific agent to use as the demo tool, and outline the workshop + follow-up structure.]</div>
+                    <div style="margin-top: 0.5rem; color: var(--text-secondary);"><strong>Impact:</strong> [Moving these teams from N to N sessions/user adds ~N–N sessions/month to total agent count.]</div>
+                </div>
+
+                <div class="recommendation-item">
+                    <span class="recommendation-priority priority-low">LOW PRIORITY</span>
+                    <div class="recommendation-title">[Recommendation Title — e.g. Expand Awareness of First-Party &amp; Third-Party Agents]</div>
+                    <div class="recommendation-description">[Description: highlight the leading first-party agent and its session volume, name underutilized third-party agents with their user/session counts, and propose a discovery guide listing all ✅ Keep agents.]</div>
+                    <div style="margin-top: 0.5rem; color: var(--text-secondary);"><strong>Impact:</strong> [Improving discoverability could add N–N incremental sessions/month with zero agent development investment.]</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== TAILORED RECOMMENDATIONS ===================== -->
+        <section id="recommendations" class="content-section">
+            <div class="section-header">
+                <h1 class="section-title">Tailored Recommendations</h1>
+                <p class="section-description">Based on your specific adoption patterns</p>
+            </div>
+
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <div class="insight-title">🎯 For Leadership</div>
+                    <div class="insight-content">
+                        <ul>
+                            <li>[Agent governance: reference number of never-used/dormant agents as a leadership-level environment hygiene issue]</li>
+                            <li>[Public Q-target: grow active agent users from N to N and active agents from N to N, to be announced at all-hands]</li>
+                            <li>[Recognize top agent creator by name — reference how many departments their agents serve as justification for formal Champion designation]</li>
+                            <li>[License expansion: reference M365 MoM growth rate and the top-priority unlicensed team (Priority Rank #1) to brief the executive team]</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-title">👥 For Team Leads</div>
+                    <div class="insight-content">
+                        <ul>
+                            <li>[Top team by user count: reference their M365 user base size vs. agent users (N% conversion) and recommend a specific entry-point agent for an awareness session]</li>
+                            <li>[2nd team: reference their M365 user count and sessions/week as a foundation, then recommend a specific agent to promote and a metric to track]</li>
+                            <li>[Top intensity team: reference their session pattern (N users × N sessions) as a case study and recommend publishing it for similar functions]</li>
+                            <li>[High-performing small team: reference their sessions/user above org average and recommend nominating their top users for the Champions cohort]</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-title">🤖 For Agent Creators</div>
+                    <div class="insight-content">
+                        <ul>
+                            <li>[Top creator by name: list their agents, focus on improving the return rate of their #1 agent from N% to N%+ through specific onboarding or re-engagement mechanism]</li>
+                            <li>[Creator of a dormant agent: name them and their agent, recommend evaluating refresh, retrain, or repurpose options]</li>
+                            <li>[All creators: reference the number of "New" agents already in the pipeline that need activation support before more are added]</li>
+                            <li>[Return rate focus: reference org average vs. lowest-performing active agent return rate and suggest specific re-entry flow improvements]</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-title">📚 For Training &amp; Enablement</div>
+                    <div class="insight-content">
+                        <ul>
+                            <li>[Design an "Agent First N Days" program: structured onboarding journey targeting conversion from Light (current N%) to Moderate engagement]</li>
+                            <li>[Run surface-specific Copilot training for the top N unlicensed chat surfaces, referencing their session counts as justification for priority]</li>
+                            <li>[Create a "Power User Spotlight" monthly communication, naming the ideal inaugural team/individual and their standout metric]</li>
+                            <li>[Prioritize specific teams for structured M365 Copilot training, referencing them as the top N license upgrade candidates per the Priority Matrix]</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== NEXT STEPS (30-60-90) ===================== -->
+        <section id="next-steps" class="content-section">
+            <div class="section-header">
+                <h1 class="section-title">Your AI Adoption Roadmap</h1>
+                <p class="section-description">30-60-90 day action plan</p>
+            </div>
+
+            <div class="maturity-stage">
+                <h3 style="margin-bottom: 1rem;">🚀 Next 30 Days</h3>
+                <ul style="margin-left: 1.5rem; line-height: 2;">
+                    <li>✅ [Audit and archive N never-used agents and N dormant agents — assign governance owner(s) by name]</li>
+                    <li>✅ [Formally launch AI Champions program — name the founding members and their teams]</li>
+                    <li>✅ [Deploy M365 Copilot license upgrade request for the top-priority unlicensed team (Priority Rank #1, N sessions/week) and secondary candidate (Rank #N)]</li>
+                    <li>✅ [Schedule awareness sessions for the top agent to the two largest M365 user bases — name teams and user counts]</li>
+                    <li>✅ [Brief leadership on agent health status: N% active rate, N High Impact agents, and the MoM growth signal requiring immediate investment]</li>
+                </ul>
+            </div>
+
+            <div class="maturity-stage">
+                <h3 style="margin-bottom: 1rem;">🎯 Next 60 Days</h3>
+                <ul style="margin-left: 1.5rem; line-height: 2;">
+                    <li>📊 [Target: increase active agent count from N to N by graduating N "New" agents into active, promoted use]</li>
+                    <li>📊 [Complete cross-team agent showcase event: top use cases presented to N+ departments by Champion team]</li>
+                    <li>📊 [Achieve N% reduction in "Light" agent users — from N% to N% light, with N% moderate users (from current N%)]</li>
+                    <li>📊 [Onboard N new agent users from the largest M365 user base — specify starting count and target count]</li>
+                    <li>📊 [Publish the top intensity team's agent use-case playbook internally and track engagement as awareness proxy]</li>
+                </ul>
+            </div>
+
+            <div class="maturity-stage">
+                <h3 style="margin-bottom: 1rem;">🌟 Next 90 Days</h3>
+                <ul style="margin-left: 1.5rem; line-height: 2;">
+                    <li>🎉 [Grow total agent active users from N to N+ (N% growth) — name the primary conversion pipelines]</li>
+                    <li>🎉 [Elevate N custom agents to "High Impact" status (currently N) — name the candidate agents and their current return rates]</li>
+                    <li>🎉 [Increase active agent utilization rate from N% (N/N) to N% (N/N) through governance, promotion, and champion-led activation]</li>
+                    <li>🎉 [Advance AI Maturity from Stage N to Stage N — define the 3 measurable criteria that confirm the transition]</li>
+                    <li>🎉 [Establish M365 Copilot growth trajectory: from current N licensed users, target N users by end of quarter through structured license expansion for top N priority unlicensed orgs]</li>
+                </ul>
+            </div>
+
+            <div class="alert alert-success">
+                <div class="alert-icon">💪</div>
+                <div class="alert-content">
+                    <div class="alert-title">You're On The Right Track!</div>
+                    <div>[2–3 sentence closing summary: reference the MoM growth rates for both agents and M365 Copilot, name the core champion users/teams driving value, and state the maturity stage transition that is achievable within 90 days with focused action on the top 3 priorities.]</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>📊 Data Source: [Source file] | Generated: [Date]</p>
+            <p>🤖 Built with insights from your Power BI adoption data</p>
+            <p style="margin-top: 1rem; opacity: 0.7;">For questions or support, contact your AI Adoption Team</p>
+        </div>
+    </main>
+
+    <script>
+        // Navigation functionality
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all nav links
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Show selected section
+            const selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.classList.add('active');
+            }
+
+            // Add active class to clicked nav link
+            event.target.classList.add('active');
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Animate progress bars on load
+        window.addEventListener('load', () => {
+            const progressBars = document.querySelectorAll('.progress-bar');
+            progressBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 100);
+            });
+        });
+
+        // Add smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
