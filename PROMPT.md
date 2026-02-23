@@ -74,7 +74,7 @@ NEXT STEPS (30-60-90 day roadmap):
   and trajectory shown in the data
 
 FOOTER:
-- Data source: use the filename visible in the PDF (wpp22.pbix or similar)
+- Data source: use the filename visible in the PDF 
 - Date: use the most recent date visible in the PDF
 
 Rules:
@@ -87,4 +87,5 @@ Rules:
 UPDATE THESE TWO PATHS BEFORE RUNNING:
 
 output the complete, fully populated HTML file html file: "C:\path\to\your\copilot-adoption-template.html"
+
 pbi pdf: "C:\path\to\your\power-bi-export.pdf"
